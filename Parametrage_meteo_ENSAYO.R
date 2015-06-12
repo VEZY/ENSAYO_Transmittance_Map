@@ -19,7 +19,7 @@ SWC[is.nan(SWC)]=NA
 
 
 #Interpolate missing water content:
-# library(zoo)
+library(zoo)
 SWC= na.approx(SWC)
 Meteorawdata$DiffuseFrSpitters[is.na(Meteorawdata$DiffuseFrSpitters)]=1
 Meteorawdata$RH_pc[Meteorawdata$RH_pc>100]=100
