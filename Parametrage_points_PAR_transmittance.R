@@ -26,16 +26,17 @@ minX= 207104.504
 Table_points= as.data.frame(cbind(X_position=round((Coord_All_Coffees$X-minX),3), 
                     Y_position=round((Coord_All_Coffees$Y-minY),3), 
                     Z_position))
-# replacePAR(datfile = "points.dat", namelist = "CONTROL", parname = "NOPOINTS", newval = nrow(Coord_All_Coffees))
-# replacePAR(datfile = "points.dat", namelist = "XYZ", parname = "COORDS", newval = Table_points)
+# replacePAR(datfile = points, namelist = "CONTROL", parname = "NOPOINTS", newval = nrow(Coord_All_Coffees))
+# replacePAR(datfile = points, namelist = "XYZ", parname = "COORDS", newval = Table_points)
 
-
+confile= paste(Path_sensible_data, "/MAESPA_routine/MAESPA_Remko_VR/confile.dat", sep='')
+points= paste(Path_sensible_data, "/MAESPA_routine/MAESPA_Remko_VR/points.dat", sep='')
 NPoints= nrow(Coord_All_Coffees)
-replacePAR_VR(datfile="confile.dat", parname = "startdate", namelist = "dates", "01/01/15")
-replacePAR_VR(datfile="confile.dat", parname = "enddate", namelist = "dates", "01/01/15")
-replacePAR_VR(datfile = "points.dat", namelist = "CONTROL", parname = "NOPOINTS", newval = NPoints)
-replacePAR_VR(datfile = "points.dat", namelist = "XYZ", parname = "COORDS", newval = Table_points) 
-system('MAESPA_routine/MAESPA_Remko_VR', show.output.on.console=T)
+replacePAR_VR(datfile=confile, parname = "startdate", namelist = "dates", "07/03/2015")
+replacePAR_VR(datfile=confile, parname = "enddate", namelist = "dates", "07/03/2015")
+replacePAR_VR(datfile = points, namelist = "CONTROL", parname = "NOPOINTS", newval = NPoints)
+replacePAR_VR(datfile = points, namelist = "XYZ", parname = "COORDS", newval = Table_points) 
+system(paste(Path_sensible_data,'/MAESPA_routine/MAESPA_Remko_VR/MAESPA_Remko_VR', sep=''), show.output.on.console=T)
 Results= readtestflx(paste(Path_sensible_data,"/MAESPA_routine/MAESPA_Remko_VR/testflx.dat", sep=""))
 
 
@@ -59,8 +60,6 @@ Raster_plot= raster(nrows=350, ncols=518, xmn=minX, xmx=(518+minX), ymn=minY, ym
 # Make a mean table by point (mean of the days and the hours) ---------------------------------
 
 Results_jourmoy= aggregate(Results[,-c(1:3,6)], list(Results[,3]), mean)
-str(Results_jourmoy)
-
 
 # Create a raster layer and plot it -----------------------------------------------------------
 
@@ -81,9 +80,10 @@ plot(APAR_plot, col=rainbow(100, start=0, end=0.9), main=expression(Incident~PAR
 # Control the legend's scale and color --------------------------------------------------------
 
 x11()
-breakpoints <- seq(0, 450, 30)
-colors <- rainbow(15, start=0, end=1)
-# colors= terrain.colors(15)
+breakpoints <- seq(0, 450, 35)
+#colors <- rainbow(100, start=0, end=1)
+colors= rev(terrain.colors(16))
+# colors <- gray.colors(14, start=0, end=1)
 plot(APAR_plot,breaks=breakpoints,col=colors, main='TestFlux APAR (umol m-2 s-1)')
 
 # Add the ENSAYO Trees on the map:
@@ -91,3 +91,39 @@ plot(APAR_plot,breaks=breakpoints,col=colors, main='TestFlux APAR (umol m-2 s-1)
 # par(mfrow=c(1,1))
 # plot(TREES, add=T)
 # par(new=T)
+
+
+
+# Make maps by hour ---------------------------------------------------------------------------
+
+head(Results)
+NBHours= 
+
+breakpoints <- seq(0, 1200, 50)
+breakpoints= breakpoints[-c(2:5)]
+colors <- rainbow(100, start=0, end=1)
+
+Rasters_Trans= vector("list", length(levels(as.factor(Results$HR))))
+Rasters_Trans[[1]]= test
+minHour= min(Results$HR)
+maxHour= max(Results$HR)
+x11()
+for (i in minHour:maxHour){
+Results_Hour= Results[Results$HR==i,]
+Results_Hour_APAR= cbind(x=Results_Hour$X, y=Results_Hour$Y, z=(Results_Hour$TTOT))
+Hour_APAR_plot=Raster_plot
+cell1 <- cellFromXY(Hour_APAR_plot, Results_Hour_APAR[,1:2])
+Hour_APAR_plot[cell1] <- Results_Hour_APAR[,3]
+filename= paste("Tranmittance_Hour_", i, ".tiff", sep="")
+mypath=file.path("F:/These/Projects_classified/ENSAYO_Transmittance_Map/Results", filename)
+tiff(file=mypath,  width= 1311 , height= 840, res=96)
+Title = bquote(Semi-Hour~N~degree~.(i)~Incident~PAR~(µmol.m^-2~.s^-1))
+plot(Hour_APAR_plot, main=Title)
+dev.off()
+}
+
+
+
+
+
+
