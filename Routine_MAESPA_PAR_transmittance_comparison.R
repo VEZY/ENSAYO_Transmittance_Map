@@ -151,14 +151,33 @@ Comparison_sim_meas$TD[Comparison_sim_meas$TD<0.05]=NA
 TD_Parcelle= aggregate(Comparison_sim_meas, 
     list(Comparison_sim_meas$Parcelle, Comparison_sim_meas$Bloque, Comparison_sim_meas$Treatment), 
     mean, na.rm=T)
+RMSE= sqrt(mean((TD_Parcelle$TD-TD_Parcelle$TD_measure)^2,na.rm=TRUE))
 x11()
 par(bg='azure3')
 plot(TD_Parcelle$TD_measure, TD_Parcelle$TD, xlim=c(0,1), ylim=c(0,1),
      col=couleur[TD_Parcelle$Parcelle], pch=19, cex=1.3, xlab='Measured diffuse transmittance (0-1)',
      ylab='Simulated diffuse transmittance (0-1)', 
      main= 'Diffuse transmittance: MAESPA simulation and Hemispheric photographs' )
-legend("bottomright", legend= paste("Parcelle", levels(Table_measures_temp$Parcela_PER)), 
-       col=couleur, pch=19, bg='white', cex=1.5) 
+legend("bottomright", legend= paste("Parcel", levels(as.factor(Table_measures_temp$Parcela_PER))), 
+       col=couleur, pch=19, bg='lightsteelblue', cex=1.5,  text.col='white') 
 abline(0, 1, lty=2)
-cor.test(TD_Parcelle$TD_measure, TD_Parcelle$TD)
+Correlation= cor.test(TD_Parcelle$TD_measure, TD_Parcelle$TD)
+legend('topleft', legend=paste("RMSE:", round(RMSE,3)), bg= 'lightsteelblue',
+       text.col='white', cex= 1.3)
 
+
+grey.colors(n, start = 0.3, end = 0.9, gamma = 2.2, alpha = NULL)
+couleurgrey= grey.colors(max(Parcelle), start = 0, end = 0.7, gamma=1)
+Forme= c(15:18, 20, 10, 8)
+par(bg='grey98')
+plot(TD_Parcelle$TD_measure, TD_Parcelle$TD, xlim=c(0.2,1), ylim=c(0.2,1),
+     col=couleurgrey[TD_Parcelle$Parcelle], pch= Forme[TD_Parcelle$Parcelle],
+     cex=1.5, xlab='Measured diffuse transmittance (0-1)', 
+     ylab='Simulated diffuse transmittance (0-1)', 
+     main= 'Diffuse transmittance: MAESPA simulation and Hemispheric photographs')
+legend("bottomright", legend= paste("Parcel", levels(as.factor(Table_measures_temp$Parcela_PER))), 
+       col=couleurgrey, pch= Forme, bg='grey95', cex=1, pt.bg = 'white'
+       )#ncol= max(Table_measures_temp$Parcela_PER))
+abline(0, 1, lty=2)
+Correlation= cor.test(TD_Parcelle$TD_measure, TD_Parcelle$TD)
+legend('topleft', legend=paste("RMSE:", round(RMSE,3)), bg= 'grey95', cex= 1)
