@@ -162,9 +162,6 @@ DOY= c(1, 62, 89, 102, 118, 131, 146, 159, 173, 187, 210, 222, 236, 250, 264, 27
        334, 348, 362)#22 dates qui correspondent
 #aux dates de mesures du LAI dans manipe Tuzet par defaut
 
-YEAR= c(rep(2014,21))
-# DOY=1:365
-
 # On a une dynamique ? dire d'Expert des leaf area par esp?ce d'arbres:
 
 # Poro: poro sheds leaves naturally before DOY 50, then recovers, then gets pruned severely on DOY215
@@ -225,7 +222,7 @@ Percent_LAD_Terminalia= Percent_LAD_Cacha #Same
 LADPoroMax= 0.429      
 # Calculated from hemispheric photographs (Transmittance, LAI, LAD casha terminaliabis.xlsx):
 LADCachaMax= 0.5
-LADTerminaliaMax= 0.3
+LADTerminaliaMax= 0.4
 CrownVolume= Trees_Table_Tree_Trunk$Crown_RAD_X * Trees_Table_Tree_Trunk$Crown_RAD_Y * Trees_Table_Tree_Trunk$Tree_Crown_height/2 * pi * 4/3 
 # RQ: the vector LeafAreaMax has a value for all species but is used for Poro only.
 ndates= length(DOY) #Number of dates to simulate = 22 dates
@@ -305,10 +302,10 @@ write.table(Table_final, paste(Path_sensible_data, "/DATA/Trees_MAESPA_final.csv
 #Table_final=read.table(paste(Path_sensible_data, "/DATA/Trees_MAESPA_final.csv"), h=T, sep=";")
 
 Treesdat= paste(Path_sensible_data, "/DATA/Fichiers_dat/Nouveaux_ENSAYO/Trees.dat", sep='')
-Dates22= c("01/01/2014", "04/03/2014", "31/03/2014", "13/04/2014", "29/04/2014", "12/05/2014", 
-           "27/05/2014", "09/06/2014", "23/06/2014", "07/07/2014", "30/07/2014", "11/08/2014",
-           "25/08/2014", "08/09/2014", "22/09/2014", "06/10/2014", "20/10/2014", "03/11/2014",
-           "17/11/2014", "01/12/2014", "15/12/2014", "29/12/2014")
+Dates22= c("01/01/2015", "04/03/2015", "31/03/2015", "13/04/2015", "29/04/2015", "12/05/2015", 
+           "27/05/2015", "09/06/2015", "23/06/2015", "07/07/2015", "30/07/2015", "11/08/2015",
+           "25/08/2015", "08/09/2015", "22/09/2015", "06/10/2015", "20/10/2015", "03/11/2015",
+           "17/11/2015", "01/12/2015", "15/12/2015", "29/12/2015")
 #replacePAR_VR : a maeswrap function to replace names of parameters
 replacePAR_VR(Treesdat, "x0", "plot", 0)
 replacePAR_VR(Treesdat, "y0", "plot", 0)

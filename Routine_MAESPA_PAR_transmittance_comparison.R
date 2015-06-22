@@ -85,7 +85,6 @@ for (i in 1:length(DATES)){
       # (either unused or not filled at this time)
 }
 
-View(ResultsTestFlux)
 
 Simulated_TD= aggregate(data.frame(ResultsTestFlux$X, ResultsTestFlux$Y, ResultsTestFlux$TD),
                         list(ResultsTestFlux$NumPhoto), unique)
@@ -136,7 +135,7 @@ View(ResultsTestFlux[which(ResultsTestFlux$TD<0.05),-c(8,9)])
 Outliers_Table= ResultsTestFlux[which(ResultsTestFlux$TD<0.05),-c(8,9)]
 Outliers_Table$Y= Outliers_Table$Y +minY
 Outliers_Table$X= Outliers_Table$X +minX
-points(Outliers_Table$Y~Outliers_Table$X, col='red')
+points(Outliers_Table$Y~Outliers_Table$X, col='red', pch= 16)
 write.table(Outliers_Table, file= paste(Path_sensible_data, "/Outliers_TD.txt", sep=''))
 points(Trees_Table$YCOORD.N.21.6~Trees_Table$XCOORD.N.21.6)
 # As we thought, the outliers are coffees that have nearly the same coordinates than a tree. 
