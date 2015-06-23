@@ -15,7 +15,7 @@
 
 
 
-#  If you does not have to understand the variables construction, you can jump to the part:
+#  If you do not have to understand the variables construction, you can jump to the part:
 # "Exporting to MAESPA .dat files"
 
 
