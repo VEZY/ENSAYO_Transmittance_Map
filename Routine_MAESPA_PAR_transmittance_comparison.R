@@ -13,7 +13,7 @@ Table_measures_temp= read.table(paste(Path_sensible_data,"/DATA/Coresp.csv", sep
                                 h=T, sep=";", numerals = "no.loss")
 Table_measures_temp$Parcela_PER= as.integer(Table_measures_temp$Parcela_PER)
 Table_measures_temp$Manejo_PER= as.integer(Table_measures_temp$Manejo_PER)
-Table_meas_temp= aggregate(Table_measures_temp, list(Table_measures_temp$ID_cafe_PER), mean)
+Table_meas_temp= aggregate(Table_measures_temp, list(Table_measures_temp$ID_cafe_PER), mean, na.rm=T)
 # aggregate returns NA's (and warnings) for non numeric variables if not integers
 Date= tapply(Table_measures_temp$TIMESTAMP, list(Table_measures_temp$ID_cafe_PER), unique)
 Table_meas= Table_meas_temp[which(!is.na(Table_meas_temp$X_PER)),]
@@ -157,7 +157,7 @@ plot(TD_Parcelle$TD_measure, TD_Parcelle$TD, xlim=c(0,1), ylim=c(0,1),
      col=couleur[TD_Parcelle$Parcelle], pch=19, cex=1.3, xlab='Measured diffuse transmittance (0-1)',
      ylab='Simulated diffuse transmittance (0-1)', 
      main= 'Diffuse transmittance: MAESPA simulation and Hemispheric photographs' )
-legend("bottomright", legend= paste("Parcel", levels(as.factor(Table_measures_temp$Parcela_PER))), 
+legend("bottomright", legend= paste("Parcel", levels(Table_measures_temp$Parcela_PER)), 
        col=couleur, pch=19, bg='lightsteelblue', cex=1.5,  text.col='white') 
 abline(0, 1, lty=2)
 Correlation= cor.test(TD_Parcelle$TD_measure, TD_Parcelle$TD)
