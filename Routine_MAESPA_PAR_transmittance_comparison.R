@@ -18,7 +18,7 @@ Table_meas_temp= aggregate(Table_measures_temp, list(Table_measures_temp$ID_cafe
 Date= tapply(Table_measures_temp$TIMESTAMP, list(Table_measures_temp$ID_cafe_PER), unique)
 Table_meas= Table_meas_temp[which(!is.na(Table_meas_temp$X_PER)),]
 Table_Comparison= data.frame(NumPhoto=as.integer(Table_meas$Num_photo_PER) ,x=Table_meas$X_PER, 
-                             y=Table_meas$Y_PER, TD_measure=Table_meas$DiffTransmittance,
+                             y=Table_meas$Y_PER, TD_measure=Table_meas$Gap.Can.Diffuse,
                              Parcelle= Table_meas$Parcela_PER, Bloque= Table_meas$Bloque_PER,
                              Treatment= Table_meas$Manejo_PER)
 
@@ -142,7 +142,9 @@ points(Trees_Table$YCOORD.N.21.6~Trees_Table$XCOORD.N.21.6)
 # We have to remove them.
 Comparison_sim_meas$TD[Comparison_sim_meas$TD<0.05]=NA
 # Redo from l.109 until l.129
-
+Parcelle= Comparison_sim_meas$Parcelle
+Simulated_TD= Comparison_sim_meas$TD
+Measured_TD= Comparison_sim_meas$TD_measure
 
 
 # Plot by parcelle ---------------------------------------------------------------------------
@@ -157,8 +159,8 @@ plot(TD_Parcelle$TD_measure, TD_Parcelle$TD, xlim=c(0,1), ylim=c(0,1),
      col=couleur[TD_Parcelle$Parcelle], pch=19, cex=1.3, xlab='Measured diffuse transmittance (0-1)',
      ylab='Simulated diffuse transmittance (0-1)', 
      main= 'Diffuse transmittance: MAESPA simulation and Hemispheric photographs' )
-legend("bottomright", legend= paste("Parcel", levels(Table_measures_temp$Parcela_PER)), 
-       col=couleur, pch=19, bg='lightsteelblue', cex=1.5,  text.col='white') 
+legend("bottomright", legend= paste("Parcel", levels(as.factor(Table_measures_temp$Parcela_PER))), 
+       col=couleur, pch=19, bg='lightsteelblue', cex=1,  text.col='white') 
 abline(0, 1, lty=2)
 Correlation= cor.test(TD_Parcelle$TD_measure, TD_Parcelle$TD)
 legend('topleft', legend=paste("RMSE:", round(RMSE,3)), bg= 'lightsteelblue',
