@@ -182,3 +182,45 @@ legend("bottomright", legend= paste("Parcel", levels(as.factor(Table_measures_te
 abline(0, 1, lty=2)
 Correlation= cor.test(TD_Parcelle$TD_measure, TD_Parcelle$TD)
 legend('topleft', legend=paste("RMSE:", round(RMSE,3)), bg= 'grey95', cex= 1)
+
+
+
+# Format article couleur:
+x11()
+plot(TD_Parcelle$TD_measure, TD_Parcelle$TD, xlim=c(0,1), ylim=c(0,1),
+     col=couleur[TD_Parcelle$Parcelle], pch=19, cex=1, xlab='', ylab='')
+mtext('Measured canopy openness (0-1)', side=1, family='A', line= 2.5, cex= 1.8)
+mtext('Simulated canopy openness (0-1)', side=2, family='A', line= 2.5, cex= 1.8) 
+NewNames= c("C", "C+E", "C+T", 'E', 'T+E', 'FS', 'T')
+legendecol= data.frame(NewNames, couleur)
+
+legend("bottomright", legend= legendecol[c(1,2,3,5,7,4,6), 1], pch= 19,
+       col= as.character(legendecol[c(1,2,3,5,7,4,6), 2]))
+abline(0, 1, lty=2)
+Correlation= cor.test(TD_Parcelle$TD_measure, TD_Parcelle$TD)
+legend('topleft', legend=paste("RMSE:", round(RMSE,3)), cex= 1)
+
+
+
+# Format article noir et blanc:
+grey.colors(n, start = 0.3, end = 0.9, gamma = 2.2, alpha = NULL)
+couleurgrey= grey.colors(max(Parcelle), start = 0, end = 0.7, gamma=1)
+Forme= c(15:18, 20, 10, 8)
+par(bg='white')
+
+x11()
+windowsFonts(A = windowsFont("Times New Roman"))
+plot(TD_Parcelle$TD_measure, TD_Parcelle$TD, xlim=c(0.2,1), ylim=c(0.2,1),
+     col=couleurgrey[TD_Parcelle$Parcelle], pch= Forme[TD_Parcelle$Parcelle],
+     cex=1, xlab='', ylab='')
+mtext('Measured canopy openness (0-1)', side=1, family='A', line= 2.5, cex= 1.8)
+mtext('Simulated canopy openness (0-1)', side=2, family='A', line= 2.5, cex= 1.8) 
+
+legende= data.frame(NewNames, Forme, couleurgrey)
+
+legend("bottomright", legend= legende[c(1,2,3,5,7,4,6), 1], 
+       col= as.character(legende[c(1,2,3,5,7,4,6), 3]), pch= legende[c(1,2,3,5,7,4,6), 2],
+       bg='white', cex=1, pt.bg = 'white')
+
+abline(0, 1, lty=2)
+legend('topleft', legend=paste("RMSE:", round(RMSE,3)), bg= 'white', cex= 1)

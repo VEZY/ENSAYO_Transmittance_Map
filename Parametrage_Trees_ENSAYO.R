@@ -22,8 +22,7 @@
 
 
 
-
-# Tree= Shade Tree
+# Tree= Shade Tree (1266)
 # Plant= whole coffee plant
 # Resprout= coffee resprout
 
@@ -223,6 +222,23 @@ LADPoroMax= 0.429
 # Calculated from hemispheric photographs (Transmittance, LAI, LAD casha terminaliabis.xlsx):
 LADCachaMax= 0.5
 LADTerminaliaMax= 0.4
+
+# LAD trunk is taken as the mean of the LAD of the trunks that F.Charbonnier took for Erythrina:
+Path_F.Charb_Data= "F:/These/Simulations_Maespa/00-Manipulations/Creation_Trees_complet_Aquiares/Trees.dat"
+
+indivradx= readPAR(Path_F.Charb_Data, "values", "indivradx")
+indivrady= readPAR(Path_F.Charb_Data, "values", "indivrady")
+ispecies= readPAR(Path_F.Charb_Data, "ispecies", "speclist")
+indivlarea= readPAR(Path_F.Charb_Data, "values", "indivlarea")
+indivhtcrown= readPAR(Path_F.Charb_Data, "values", "indivhtcrown")
+
+CrownVolume_F.Charb= indivradx * indivrady * indivhtcrown/2 * pi * 4/3 
+ispecies38= rep(ispecies, each= 38)
+LADTrunkF.Charb= (600)/(CrownVolume_F.Charb[ispecies38==3])
+plot(LADTrunkF.Charb)
+LADTrunk= mean(600/CrownVolume_F.Charb[ispecies38==3])
+
+
 CrownVolume= Trees_Table_Tree_Trunk$Crown_RAD_X * Trees_Table_Tree_Trunk$Crown_RAD_Y * Trees_Table_Tree_Trunk$Tree_Crown_height/2 * pi * 4/3 
 # RQ: the vector LeafAreaMax has a value for all species but is used for Poro only.
 ndates= length(DOY) #Number of dates to simulate = 22 dates
@@ -252,7 +268,7 @@ for (i in 1:length(Trees_Table_Tree_Trunk$Tree_num_MAESPA))  {
                 RadYDates[i,]= Trees_Table_Tree_Trunk$Crown_RAD_Y[i]
                 Crown_heightDates[i,]= Trees_Table_Tree_Trunk$Tree_Crown_height[i] * Percent_Vol_Terminalia
             }else{
-                LEAF_AREA[i,]= rep(600, ndates) #Extreme value for trunk (totally opaque)
+                LEAF_AREA[i,]= CrownVolume[i] * LADTrunk #No variation in time (trunks are very opaque)
                 RadXDates[i,]= Trees_Table_Tree_Trunk$Crown_RAD_X[i]
                 RadYDates[i,]= Trees_Table_Tree_Trunk$Crown_RAD_Y[i]
                 Crown_heightDates[i,]= Trees_Table_Tree_Trunk$Tree_Crown_height[i]
